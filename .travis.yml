@@ -1,0 +1,23 @@
+language: python
+cache: pip
+
+python:
+  - 2.7
+  - 3.6
+env:
+  - LEKTOR=2.3
+  - LEKTOR=master
+
+matrix:
+  exclude:
+    - python: 3.6
+      env: LEKTOR=2.3
+
+install:
+  - if [[ "${LEKTOR}" = "master" ]]; then pip install "git+https://github.com/lektor/lektor.git"; else pip install "lektor==${LEKTOR}"; fi
+
+script:
+  - tests/test.sh
+
+notifications:
+  email: false

@@ -1,5 +1,6 @@
 /dist
 /build
+/tests/tmp
 
 *.py[co]
 *.egg-info

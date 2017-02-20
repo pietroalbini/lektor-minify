@@ -37,6 +37,15 @@ $ lektor server -f minify-assets
 If you need to minify only CSS or JS though, you can either use the
 `minify-css` or `minify-js` flags to avoid minifying the other kind of asset.
 
+## Testing
+
+Some basic tests are available for the project. If you want to run them clone
+the repository, install Lektor and run:
+
+```
+tests/test.sh
+```
+
 [lektor]: https://www.getlektor.com/
 [rcssmin]: http://opensource.perlig.de/rcssmin/
 [rjsmin]: http://opensource.perlig.de/rjsmin/
