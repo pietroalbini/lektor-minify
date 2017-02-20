@@ -23,7 +23,7 @@
 lektor-minify-assets
 ====================
 
-This package allows to minify the static assets of your Lektor website directly
+This plugin allows to minify the static assets of your Lektor website directly
 from the build process, without any additional tool.
 
 If you want to use it in your project, execute the command::
@@ -34,8 +34,8 @@ Then, you just need to build with the ``minify-assets`` flag::
 
     $ lektor build -f minify-assets
 
-If you neet to minify only CSS or JS files use either the ``minify-css`` or
-``minify-js`` flags instead.
+If you need to minify only CSS or JS though, you can either use the
+``minify-css`` or ``minify-js`` flags to avoid minifying the other kind of asset.
 
 `Learn more about the plugin`_
 
