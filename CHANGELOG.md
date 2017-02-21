@@ -1,6 +1,8 @@
 # lektor-minify changelog
 
-## Upcoming release
+## lektor-minify 1.1
+
+_Released on February 22th, 2017_
 
 * Fix wheel for Python 2 not being built
 * Fix unicode files not properly handled
