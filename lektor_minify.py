@@ -33,9 +33,9 @@ MINIFY_CSS_FLAG = "minify-css"
 MINIFY_JS_FLAG = "minify-js"
 
 
-class MinifyAssetsPlugin(Plugin):
-    name = u"minify-assets"
-    description = u"Minify your CSS and JS files during the Lektor build"
+class MinifyPlugin(Plugin):
+    name = u"minify"
+    description = u"Minify your build artifacts during the build process"
 
     def __init__(self, *args, **kwargs):
         Plugin.__init__(self, *args, **kwargs)

@@ -19,26 +19,22 @@
 # SOFTWARE.
 
 '''
-====================
-lektor-minify-assets
-====================
+=============
+lektor-minify
+=============
 
-This plugin allows to minify the static assets of your Lektor website directly
-from the build process, without any additional tool.
+This plugin allows you to minify the build artifacts of your `Lektor`_ project
+during the build process, without any additional tool. It currently supports
+minifying CSS and JS files.
 
-If you want to use it in your project, execute the command::
-
-    $ lektor plugins add lektor-minify-assets
-
-Then, you just need to build with the ``minify-assets`` flag::
-
-    $ lektor build -f minify-assets
-
-If you need to minify only CSS or JS though, you can either use the
-``minify-css`` or ``minify-js`` flags to avoid minifying the other kind of asset.
+The plugin only minifies the files changed during the last build, avoiding
+slowing down the build if your project consists of a lot of files. Internally
+it uses the rcssmin and rjsmin libraries, and it's released under the MIT
+license.
 
 `Learn more about the plugin`_
 
+.. _Lektor: https://www.getlektor.com
 .. _Learn more about the plugin: https://github.com/pietroalbini/lektor-minify-assets
 '''
 
@@ -48,18 +44,18 @@ import setuptools
 
 
 setuptools.setup(
-    name = "lektor-minify-assets",
+    name = "lektor-minify",
     version = "1.0.dev0",
     license = "MIT",
 
     author = "Pietro Albini",
     author_email = "pietro@pietroalbini.org",
 
-    description = "Minify static assets in a Lektor project",
+    description = "Minify build artifacts during the Lektor build process",
     long_description = __doc__,
 
     py_modules = [
-        "lektor_minify_assets",
+        "lektor_minify",
     ],
 
     install_requires  =  [
@@ -69,7 +65,7 @@ setuptools.setup(
 
     entry_points = {
         "lektor.plugins": [
-            "minify-assets = lektor_minify_assets:MinifyAssetsPlugin",
+            "minify = lektor_minify:MinifyPlugin",
         ]
     },
 

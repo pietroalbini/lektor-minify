@@ -1,18 +1,21 @@
-# lektor-minify-assets
+# lektor-minify
 
-This plugin allows you to minify the static assets of your [Lektor][lektor]
-project directly from the build process, without any additional tool.
+This plugin allows you to minify the build artifacts of your [Lektor][lektor]
+project during the build process, without any additional tool. It currently
+supports minifying CSS and JS files.
 
-Internally it uses the [rcssmin][rcssmin] and [rjsmin][rjsmin] libraries, and
-it's released under the MIT license.
+The plugin only minifies the files changed during the last build, avoiding
+slowing down the build if your project consists of a lot of files. Internally
+it uses the [rcssmin][rcssmin] and [rjsmin][rjsmin] libraries, and it's
+released under the MIT license.
 
 ## Installation
 
-If you want to use lektor-minify-assets in your project, you can to execute
-the following command in your Lektor project folder:
+If you want to use lektor-minify in your project, you can to execute the
+following command in your Lektor project folder:
 
 ```
-$ lektor plugins add lektor-minify-assets
+$ lektor plugins add lektor-minify
 ```
 
 After you did that, it's good to clear the build cache: the plugin only
