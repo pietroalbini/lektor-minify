@@ -28,9 +28,8 @@ from lektor.pluginsystem import Plugin
 from lektor.reporter import reporter
 
 
-MINIFY_ALL_FLAG = "minify-assets"
-MINIFY_CSS_FLAG = "minify-css"
-MINIFY_JS_FLAG = "minify-js"
+MINIFY_FLAG = "minify"
+ALLOWED_KINDS = {"css", "js"}
 
 
 class MinifyPlugin(Plugin):
@@ -49,18 +48,27 @@ class MinifyPlugin(Plugin):
         except AttributeError:  # Lektor 2
             flags = builder.build_flags
 
-        if MINIFY_ALL_FLAG in flags:
-            self.can_minify_css = True
-            self.can_minify_js = True
+        if MINIFY_FLAG in flags:
+            if flags[MINIFY_FLAG] == u"minify":
+                self.can_minify = set(ALLOWED_KINDS)
+            else:
+                kinds = set(flags[MINIFY_FLAG].split(","))
+
+                diff = kinds - ALLOWED_KINDS
+                for kind in diff:
+                    reporter.report_generic(
+                        "\033[33mUnknown param for minify:\033[37m %s" % kind
+                    )
+
+                self.can_minify = kinds & ALLOWED_KINDS
         else:
-            self.can_minify_css = MINIFY_CSS_FLAG in flags
-            self.can_minify_js = MINIFY_JS_FLAG in flags
+            self.can_minify = set()
 
     def get_minifier_for(self, file_name):
         """Check if the file should be minified and return the minifier"""
-        if file_name.endswith(".css") and self.can_minify_css:
+        if file_name.endswith(".css") and "css" in self.can_minify:
             return rcssmin.cssmin
-        elif file_name.endswith(".js") and self.can_minify_js:
+        elif file_name.endswith(".js") and "js" in self.can_minify:
             return rjsmin.jsmin
         else:
             return None

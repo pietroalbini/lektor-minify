@@ -28,17 +28,24 @@ $ lektor clean --yes
 
 ## Usage
 
-This plugin isn't enabled by default: you need to provide the `minify-assets`
-flag to the `build` (or `server`) command if you want to minify the static
-assets:
+This plugin isn't enabled by default: you need to provide the `minify` flag to
+the `build` (or `server`) command if you want to minify the build artifacts:
 
 ```
-$ lektor build -f minify-assets
-$ lektor server -f minify-assets
+$ lektor build -f minify
+$ lektor server -f minify
 ```
 
-If you need to minify only CSS or JS though, you can either use the
-`minify-css` or `minify-js` flags to avoid minifying the other kind of asset.
+If you need to minify only some kind of artifacts, you can tell which ones you
+want to minify by providing their kinds as a comma-separated list in the flag:
+
+```
+$ lektor build -f minify:css
+$ lektor build -f minify:css,js
+```
+
+Keep in mind only artifacts built with the flag will be minified: if you
+execute other builds without the flag there might be some unminified files!
 
 ## Testing
 
