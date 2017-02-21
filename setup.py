@@ -35,7 +35,7 @@ license.
 `Learn more about the plugin`_
 
 .. _Lektor: https://www.getlektor.com
-.. _Learn more about the plugin: https://github.com/pietroalbini/lektor-minify-assets
+.. _Learn more about the plugin: https://github.com/pietroalbini/lektor-minify
 '''
 
 # -*- coding: utf-8 -*-
