@@ -53,7 +53,7 @@ Some basic tests are available for the project. If you want to run them clone
 the repository, install Lektor and run:
 
 ```
-tests/test.sh
+make test
 ```
 
 [lektor]: https://www.getlektor.com/
