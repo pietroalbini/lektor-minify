@@ -54,7 +54,7 @@ setuptools.setup(
     description = "Minify build artifacts during the Lektor build process",
     long_description = __doc__,
 
-    py_modules = [
+    packages = [
         "lektor_minify",
     ],
 
