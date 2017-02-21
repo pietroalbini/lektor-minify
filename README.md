@@ -2,12 +2,12 @@
 
 This plugin allows you to minify the build artifacts of your [Lektor][lektor]
 project during the build process, without any additional tool. It currently
-supports minifying CSS and JS files.
+supports minifying HTML, CSS and JS files.
 
 The plugin only minifies the files changed during the last build, avoiding
 slowing down the build if your project consists of a lot of files. Internally
-it uses the [rcssmin][rcssmin] and [rjsmin][rjsmin] libraries, and it's
-released under the MIT license.
+it uses the [django_htmlmin][htmlmin], [rcssmin][rcssmin] and [rjsmin][rjsmin]
+libraries, and it's released under the MIT license.
 
 ## Installation
 
@@ -40,8 +40,8 @@ If you need to minify only some kind of artifacts, you can tell which ones you
 want to minify by providing their kinds as a comma-separated list in the flag:
 
 ```
-$ lektor build -f minify:css
-$ lektor build -f minify:css,js
+$ lektor build -f minify:html
+$ lektor build -f minify:html,css,js
 ```
 
 Keep in mind only artifacts built with the flag will be minified: if you
@@ -59,3 +59,4 @@ tests/test.sh
 [lektor]: https://www.getlektor.com/
 [rcssmin]: http://opensource.perlig.de/rcssmin/
 [rjsmin]: http://opensource.perlig.de/rjsmin/
+[htmlmin]: https://github.com/cobrateam/django-htmlmin

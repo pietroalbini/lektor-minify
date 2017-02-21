@@ -24,12 +24,14 @@ from __future__ import unicode_literals
 
 import rcssmin
 import rjsmin
+import htmlmin.minify as htmlmin
+
 from lektor.pluginsystem import Plugin
 from lektor.reporter import reporter
 
 
 MINIFY_FLAG = "minify"
-ALLOWED_KINDS = {"css", "js"}
+ALLOWED_KINDS = {"css", "js", "html"}
 
 
 class MinifyPlugin(Plugin):
@@ -70,6 +72,8 @@ class MinifyPlugin(Plugin):
             return rcssmin.cssmin
         elif file_name.endswith(".js") and "js" in self.can_minify:
             return rjsmin.jsmin
+        elif file_name.endswith(".html") and "html" in self.can_minify:
+            return htmlmin.html_minify
         else:
             return None
 

@@ -25,7 +25,7 @@ lektor-minify
 
 This plugin allows you to minify the build artifacts of your `Lektor`_ project
 during the build process, without any additional tool. It currently supports
-minifying CSS and JS files.
+minifying HTML, CSS and JS files.
 
 The plugin only minifies the files changed during the last build, avoiding
 slowing down the build if your project consists of a lot of files. Internally
@@ -61,6 +61,7 @@ setuptools.setup(
     install_requires  =  [
         "rcssmin",
         "rjsmin",
+        "django_htmlmin",
     ],
 
     entry_points = {

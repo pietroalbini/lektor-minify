@@ -23,6 +23,7 @@ set -euo pipefail
 
 EXPECTED_CSS='body{color:#fff}'
 EXPECTED_JS='function test(){console.log("test");}'
+EXPECTED_HTML='<html><head></head><body><div>This is a test</div></body></html>'
 
 # Detect source directory
 # Thanks to http://stackoverflow.com/a/246128/2204144
@@ -41,6 +42,17 @@ build() {
     cd "${TEST_PROJECT}"
     rm -rf "${TMP_DIRECTORY}"
     lektor build -O "${TMP_DIRECTORY}" $@
+}
+
+assert_html() {
+    outcome="$1"
+
+    content="`cat "${TMP_DIRECTORY}/index.html"`"
+    if [[ "${content}" = "${EXPECTED_HTML}" ]]; then
+        [[ "${outcome}" = "true" ]] || fail html
+    else
+        [[ "${outcome}" = "false" ]] || fail html
+    fi
 }
 
 assert_style() {
@@ -73,26 +85,37 @@ fail() {
 
 echo "Testing with no flags..."
 build
+assert_html false
 assert_style false
 assert_script false
 
 echo "Testing with the minify flag..."
 build -f minify
+assert_html true
 assert_style true
 assert_script true
 
 echo "Testing with the minify:css flag..."
 build -f minify:css
+assert_html false
 assert_style true
 assert_script false
 
 echo "Testing with the minify:js flag..."
 build -f minify:js
+assert_html false
 assert_style false
 assert_script true
 
-echo "Testing with the minify:css,js flag..."
-build -f minify
+echo "Testing with the minify:html flag..."
+build -f minify:html
+assert_html true
+assert_style false
+assert_script false
+
+echo "Testing with the minify:css,js,html flag..."
+build -f minify:css,js,html
+assert_html true
 assert_style true
 assert_script true
 
