@@ -45,7 +45,7 @@ import setuptools
 
 setuptools.setup(
     name = "lektor-minify",
-    version = "1.0.dev0",
+    version = "1.0",
     license = "MIT",
 
     author = "Pietro Albini",
