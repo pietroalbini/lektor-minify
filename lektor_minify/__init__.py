@@ -22,6 +22,8 @@
 
 from __future__ import unicode_literals
 
+import codecs
+
 import rcssmin
 import rjsmin
 import htmlmin.minify as htmlmin
@@ -91,10 +93,9 @@ class MinifyPlugin(Plugin):
                 continue
 
             with artifact.update():
-                with artifact.open("r+") as f:
-                    content = minifier(f.read())
+                with artifact.open("rb+") as f:
+                    content = codecs.decode(f.read(), "utf-8")
 
-                    # Rewrite the file in-place
                     f.seek(0)
-                    f.write(content)
+                    f.write(codecs.encode(minifier(content), "utf-8"))
                     f.truncate()

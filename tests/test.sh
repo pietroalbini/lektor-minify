@@ -23,7 +23,7 @@ set -euo pipefail
 
 EXPECTED_CSS='body{color:#fff}'
 EXPECTED_JS='function test(){console.log("test");}'
-EXPECTED_HTML='<html><head></head><body><div>This is a test</div></body></html>'
+EXPECTED_HTML='<html><head></head><body><div>This is a test ✅</div></body></html>'
 
 # Detect source directory
 # Thanks to http://stackoverflow.com/a/246128/2204144
