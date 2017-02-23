@@ -43,18 +43,27 @@ class MinifyPlugin(Plugin):
     def __init__(self, *args, **kwargs):
         Plugin.__init__(self, *args, **kwargs)
 
-    def on_before_build_all(self, builder, **extra):
-        # Prepare some state
-        self.seen_artifacts = set()
+    def can_minify(self, builder, type):
+        """Check if a file type can be minified"""
+        try:
+            types = builder.__can_minify
+        except AttributeError:
+            types = self.parse_flags(builder)
 
+        return type in types
+
+    def parse_flags(self, builder):
+        """Parse the flags of the provided builder"""
         try:  # Lektor 3+
             flags = builder.extra_flags
         except AttributeError:  # Lektor 2
             flags = builder.build_flags
 
+        types = set()
+
         if MINIFY_FLAG in flags:
             if flags[MINIFY_FLAG] == u"minify":
-                self.can_minify = set(ALLOWED_KINDS)
+                types = set(ALLOWED_KINDS)
             else:
                 kinds = set(flags[MINIFY_FLAG].split(","))
 
@@ -64,31 +73,41 @@ class MinifyPlugin(Plugin):
                         "\033[33mUnknown param for minify:\033[37m %s" % kind
                     )
 
-                self.can_minify = kinds & ALLOWED_KINDS
-        else:
-            self.can_minify = set()
+                types = kinds & ALLOWED_KINDS
 
-    def get_minifier_for(self, file_name):
+        builder.__can_minify = types
+        return types
+
+    def get_minifier_for(self, builder, file_name):
         """Check if the file should be minified and return the minifier"""
-        if file_name.endswith(".css") and "css" in self.can_minify:
+        if file_name.endswith(".css") and self.can_minify(builder, "css"):
             return rcssmin.cssmin
-        elif file_name.endswith(".js") and "js" in self.can_minify:
+        elif file_name.endswith(".js") and self.can_minify(builder, "js"):
             return rjsmin.jsmin
-        elif file_name.endswith(".html") and "html" in self.can_minify:
+        elif file_name.endswith(".html") and self.can_minify(builder, "html"):
             return htmlmin.html_minify
         else:
             return None
 
-    def on_after_build(self, build_state, **extra):
-        # Get a list of the new artifacts updated since last event
-        artifacts = set(build_state.updated_artifacts) - self.seen_artifacts
-        self.seen_artifacts = artifacts
+    def on_after_build(self, builder, build_state, **extra):
+        # Get the new artifacts built in this state
+        try:
+            seen = build_state.__seen_artifacts
+        except AttributeError:
+            build_state.__seen_artifacts = set()
+            artifacts = set(build_state.updated_artifacts)
+        else:
+            updated = set(build_state.updated_artifacts)
+            artifacts = updated - seen
 
-        # Check if the new artifacts should be minified
+        # This keeps track of the artifacts already built in this build_state,
+        # so those files aren't minified multiple times
+        build_state.__seen_artifacts |= artifacts
+
         for artifact in artifacts:
             name = artifact.dst_filename
 
-            minifier = self.get_minifier_for(name)
+            minifier = self.get_minifier_for(builder, name)
             if minifier is None:
                 continue
 
