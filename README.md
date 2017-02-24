@@ -1,5 +1,7 @@
 # lektor-minify
 
+[![Build Status](https://travis-ci.org/pietroalbini/lektor-minify.svg?branch=master)](https://travis-ci.org/pietroalbini/lektor-minify)
+
 This plugin allows you to minify the build artifacts of your [Lektor][lektor]
 project during the build process, without any additional tool. It currently
 supports minifying HTML, CSS and JS files.
@@ -8,6 +10,8 @@ The plugin only minifies the files changed during the last build, avoiding
 slowing down the build if your project consists of a lot of files. Internally
 it uses the [django_htmlmin][htmlmin], [rcssmin][rcssmin] and [rjsmin][rjsmin]
 libraries, and it's released under the MIT license.
+
+**Supported Lektor releases:** 2.3, 3.0 (not yet released)
 
 ## Installation
 
