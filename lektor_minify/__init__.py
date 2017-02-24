@@ -33,7 +33,19 @@ from lektor.reporter import reporter
 
 
 MINIFY_FLAG = "minify"
-ALLOWED_KINDS = {"css", "js", "html"}
+
+# To add new minifiers, you need to add a new matcher and the corresponding
+# minifier -- no other code change is needed
+MATCHERS = {
+    "html": lambda name: name.endswith(".html"),
+    "css": lambda name: name.endswith(".css"),
+    "js": lambda name: name.endswith(".js"),
+}
+MINIFIERS = {
+    "html": htmlmin.html_minify,
+    "css": rcssmin.cssmin,
+    "js": rjsmin.jsmin,
+}
 
 
 class MinifyPlugin(Plugin):
@@ -61,33 +73,23 @@ class MinifyPlugin(Plugin):
 
         types = set()
 
+        allowed_kinds = set(MATCHERS.keys())
         if MINIFY_FLAG in flags:
             if flags[MINIFY_FLAG] == u"minify":
-                types = set(ALLOWED_KINDS)
+                types = allowed_kinds
             else:
                 kinds = set(flags[MINIFY_FLAG].split(","))
 
-                diff = kinds - ALLOWED_KINDS
+                diff = kinds - allowed_kinds
                 for kind in diff:
                     reporter.report_generic(
                         "\033[33mUnknown param for minify:\033[37m %s" % kind
                     )
 
-                types = kinds & ALLOWED_KINDS
+                types = kinds & allowed_kinds
 
         builder.__can_minify = types
         return types
-
-    def get_minifier_for(self, builder, file_name):
-        """Check if the file should be minified and return the minifier"""
-        if file_name.endswith(".css") and self.can_minify(builder, "css"):
-            return rcssmin.cssmin
-        elif file_name.endswith(".js") and self.can_minify(builder, "js"):
-            return rjsmin.jsmin
-        elif file_name.endswith(".html") and self.can_minify(builder, "html"):
-            return htmlmin.html_minify
-        else:
-            return None
 
     def on_after_build(self, builder, build_state, **extra):
         # Get the new artifacts built in this state
@@ -107,8 +109,11 @@ class MinifyPlugin(Plugin):
         for artifact in artifacts:
             name = artifact.dst_filename
 
-            minifier = self.get_minifier_for(builder, name)
-            if minifier is None:
+            for type, matcher in MATCHERS.items():
+                if matcher(name) and self.can_minify(builder, type):
+                    minifier = MINIFIERS[type]
+                    break
+            else:
                 continue
 
             with artifact.update():
