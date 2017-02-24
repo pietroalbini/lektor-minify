@@ -51,6 +51,35 @@ $ lektor build -f minify:html,css,js
 Keep in mind only artifacts built with the flag will be minified: if you
 execute other builds without the flag there might be some unminified files!
 
+## Jinja2 filter
+
+The plugin also provides the `minify` filter, ready to be used in your
+templates. The filter is useful, for example, if you need to include in the
+page external assets, and you want them to be minified as well.
+
+You can use the filter by piping the content into it, and providing the type of
+the content as argument:
+
+```
+{{ this.extra_style | minify("css") }}
+```
+
+If you need to apply the filter to a block of code, you can also use the filter
+block Jinja2 provides:
+
+```
+<style>
+    {% filter minify("css") %}
+        body {
+            color: #fff;
+        }
+    {% endfilter %}
+</style>
+```
+
+The filter will work even if the `minify` flag is not provided during the
+build.
+
 ## Testing
 
 Some basic tests are available for the project. If you want to run them clone

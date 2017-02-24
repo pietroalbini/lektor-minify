@@ -24,6 +24,10 @@ set -euo pipefail
 EXPECTED_CSS='body{color:#fff}'
 EXPECTED_JS='function test(){console.log("test");}'
 EXPECTED_HTML='<html><head></head><body><div>This is a test ✅</div></body></html>'
+EXPECTED_FILTER_MIN='<html><head><style>body{color:#fff}</style></head><body></body></html>'
+EXPECTED_FILTER_NO_MIN='<style>
+    body{color:#fff}
+</style>'
 
 # Detect source directory
 # Thanks to http://stackoverflow.com/a/246128/2204144
@@ -44,38 +48,25 @@ build() {
     lektor build -O "${TMP_DIRECTORY}" $@
 }
 
-assert_html() {
-    outcome="$1"
+assert() {
+    name="$1"
+    file="$2"
+    expected="$3"
+    outcome="$4"
 
-    content="`cat "${TMP_DIRECTORY}/index.html"`"
-    if [[ "${content}" = "${EXPECTED_HTML}" ]]; then
-        [[ "${outcome}" = "true" ]] || fail html
+    content="`cat "${TMP_DIRECTORY}/${file}"`"
+    if [[ "${content}" == "${expected}" ]]; then
+        [[ "${outcome}" = "true" ]] || fail "${name}"
     else
-        [[ "${outcome}" = "false" ]] || fail html
+        [[ "${outcome}" = "false" ]] || fail "${name}"
     fi
 }
 
-assert_style() {
-    outcome="$1"
-
-    content="`cat "${TMP_DIRECTORY}/static/style.css"`"
-    if [[ "${content}" = "${EXPECTED_CSS}" ]]; then
-        [[ "${outcome}" = "true" ]] || fail css
-    else
-        [[ "${outcome}" = "false" ]] || fail css
-    fi
-}
-
-assert_script() {
-    outcome="$1"
-
-    content="`cat "${TMP_DIRECTORY}/static/script.js"`"
-    if [[ "${content}" = "${EXPECTED_JS}" ]]; then
-        [[ "${outcome}" = "true" ]] || fail js
-    else
-        [[ "${outcome}" = "false" ]] || fail js
-    fi
-}
+assert_html() { assert html index.html "${EXPECTED_HTML}" "$1"; }
+assert_style() { assert css static/style.css "${EXPECTED_CSS}" "$1"; }
+assert_script() { assert js static/script.js "${EXPECTED_JS}" "$1"; }
+assert_filter_min() { assert filter filter.html "${EXPECTED_FILTER_MIN}" "$1"; }
+assert_filter_no_min() { assert filter filter.html "${EXPECTED_FILTER_NO_MIN}" "$1"; }
 
 fail() {
     echo "Failed $@"
@@ -88,36 +79,42 @@ build
 assert_html false
 assert_style false
 assert_script false
+assert_filter_no_min true
 
 echo "Testing with the minify flag..."
 build -f minify
 assert_html true
 assert_style true
 assert_script true
+assert_filter_min true
 
 echo "Testing with the minify:css flag..."
 build -f minify:css
 assert_html false
 assert_style true
 assert_script false
+assert_filter_no_min true
 
 echo "Testing with the minify:js flag..."
 build -f minify:js
 assert_html false
 assert_style false
 assert_script true
+assert_filter_no_min true
 
 echo "Testing with the minify:html flag..."
 build -f minify:html
 assert_html true
 assert_style false
 assert_script false
+assert_filter_min true
 
 echo "Testing with the minify:css,js,html flag..."
 build -f minify:css,js,html
 assert_html true
 assert_style true
 assert_script true
+assert_filter_min true
 
 echo "Test successful!"
 rm -rf "${TMP_DIRECTORY}"

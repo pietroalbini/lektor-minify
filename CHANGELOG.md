@@ -2,6 +2,7 @@
 
 ## Upcoming release
 
+* Add the `minify()` filter to Jinja2 templates
 * Fix plugin crashing sometimes on the development server
 
 ## lektor-minify 1.1

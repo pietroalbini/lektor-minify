@@ -33,6 +33,7 @@ from lektor.reporter import reporter
 
 
 MINIFY_FLAG = "minify"
+FILTER_NAME = "minify"
 
 # To add new minifiers, you need to add a new matcher and the corresponding
 # minifier -- no other code change is needed
@@ -91,6 +92,15 @@ class MinifyPlugin(Plugin):
 
         builder.__can_minify = types
         return types
+
+    def jinja_filter(self, content, type):
+        """Minify a part of a template"""
+        if type not in MINIFIERS:
+            raise NameError("Unknown minifier: %s" % type)
+        return MINIFIERS[type](content)
+
+    def on_setup_env(self, **extra):
+        self.env.jinja_env.filters[FILTER_NAME] = self.jinja_filter
 
     def on_after_build(self, builder, build_state, **extra):
         # Get the new artifacts built in this state
