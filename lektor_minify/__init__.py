@@ -75,7 +75,7 @@ class MinifyPlugin(Plugin):
 
         allowed_kinds = set(MATCHERS.keys())
         if MINIFY_FLAG in flags:
-            if flags[MINIFY_FLAG] == u"minify":
+            if flags[MINIFY_FLAG] == MINIFY_FLAG:
                 types = allowed_kinds
             else:
                 kinds = set(flags[MINIFY_FLAG].split(","))
@@ -83,7 +83,8 @@ class MinifyPlugin(Plugin):
                 diff = kinds - allowed_kinds
                 for kind in diff:
                     reporter.report_generic(
-                        "\033[33mUnknown param for minify:\033[37m %s" % kind
+                        "\033[33mUnknown param for flag %s:\033[37m %s"
+                        % (MINIFY_FLAG, kind)
                     )
 
                 types = kinds & allowed_kinds
