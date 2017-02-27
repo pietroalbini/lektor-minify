@@ -1,6 +1,8 @@
 # lektor-minify changelog
 
-## Upcoming release
+## lektor-minify 1.2
+
+_Released on February 27th, 2017_
 
 * Add the `minify()` filter to Jinja2 templates
 * Fix plugin crashing sometimes on the development server
