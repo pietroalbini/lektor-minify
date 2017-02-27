@@ -22,6 +22,10 @@
 SOURCE = lektor_minify
 PACKAGES_OUT = build/packages
 
+# Uploading configuration
+RELEASES_SERVER = files@winter.net.pietroalbini.org
+RELEASES_DIR = public/releases/$(NAME)/$(shell $(PYTHON) setup.py --version)
+
 # Executables
 PYTHON = python3
 GPG = gpg
@@ -58,6 +62,8 @@ $(PACKAGES_OUT)/%.asc:
 # Packages uploading
 
 upload: build sign
+	@ssh $(RELEASES_SERVER) -- mkdir -p $(RELEASES_DIR)
+	@scp $(PACKAGES_DIR)/* $(RELEASES_SERVER):$(RELEASES_DIR)
 	@$(TWINE) upload --config-file .pypirc -r upload --skip-existing $(PACKAGES_OUT)/*
 
 
