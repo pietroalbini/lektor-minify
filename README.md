@@ -11,7 +11,7 @@ slowing down the build if your project consists of a lot of files. Internally
 it uses the [django_htmlmin][htmlmin], [rcssmin][rcssmin] and [rjsmin][rjsmin]
 libraries, and it's released under the MIT license.
 
-**Supported Lektor releases:** 2.3, 3.0 (not yet released)
+**Supported Lektor releases:** 2.3, 3.0
 
 ## Installation
 

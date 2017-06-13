@@ -6,6 +6,7 @@ python:
   - 3.6
 env:
   - LEKTOR=2.3
+  - LEKTOR=3.0
   - LEKTOR=master
 
 matrix:
